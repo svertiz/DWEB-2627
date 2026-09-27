@@ -9,6 +9,7 @@
     <main class="page">
         <section class="pokemon-grid">
             <h1>Pokemons</h1>
+            <a th:href="@{/informacion}">Información de la Pokédex</a>
             <div class="cards">
                 <div class="card" th:each="pokemon : ${pokemons}">
                     <div class="card-image">

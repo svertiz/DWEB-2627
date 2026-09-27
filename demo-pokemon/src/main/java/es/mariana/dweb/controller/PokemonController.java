@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @Controller
@@ -21,6 +22,21 @@ public class PokemonController {
         model.addAttribute("pokemons", pokemons);
 
         return "home";
+    }
+
+    @GetMapping("/informacion")
+    public String informacion(Model model) {
+        Pokemon pokemon = pokemonService.findRandom();
+        model.addAttribute("numeroPokemon",pokemon.getId());
+        model.addAttribute("nombrePokemon",pokemon.getName());
+        model.addAttribute("alturaPokemon",pokemon.getHeight());
+        model.addAttribute("pesoPokemon",pokemon.getWeight());
+        model.addAttribute("experienciaBasePokemon",pokemon.getBaseExperience());
+        model.addAttribute("srcPokemon",pokemon.getImageURL());
+
+        model.addAttribute("fecha", LocalDateTime.now());
+
+        return "informacion";
     }
 
 }

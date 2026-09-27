@@ -11,3 +11,4 @@ public class DemoApplication {
     }
 
 }
+//         model.addAttribute("altusdraPokemon",pokemon);
