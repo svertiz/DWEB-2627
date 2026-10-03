@@ -39,4 +39,20 @@ public class PokemonController {
         return "informacion";
     }
 
+    @GetMapping("/tabla")
+    public String pokemonTabla(Model model) {
+        ArrayList<Pokemon> listaPokemon = pokemonService.findRandomList(10);
+        model.addAttribute("listaPokemons",listaPokemon);
+        model.addAttribute("fecha", LocalDateTime.now());
+        return "tabla";
+    }
+
+    @GetMapping("/galeria")
+    public String pokemonGaleria(Model model) {
+        ArrayList<Pokemon> galeriaPokemon = pokemonService.findRandomList(12);
+        model.addAttribute("galeriaPokemon",galeriaPokemon);
+        model.addAttribute("fecha", LocalDateTime.now());
+        return "galeria";
+    }
+
 }
