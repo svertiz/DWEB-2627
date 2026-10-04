@@ -11,6 +11,7 @@
 <body>
 <main class="page">
   <header class="topbar">
+      <nav th:replace="~{fragments :: menu}"></nav>
     <a class="back-link" th:href="@{/}">← Volver a la Pokédex</a>
     <span th:text = "${#temporals.format(fecha, 'dd''/''MM''/''yyyy'' a las ''HH:mm')}" class="updated"></span>
   </header>
@@ -33,6 +34,5 @@
     </article>
   </section>
 </main>
-
-
+<footer th:replace="~{fragments :: footer}"></footer>
 </body></html>

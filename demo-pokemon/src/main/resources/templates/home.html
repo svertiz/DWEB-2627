@@ -9,11 +9,7 @@
     <main class="page">
         <section class="pokemon-grid">
             <h1>Pokemons</h1>
-            <a th:href="@{/informacion}">Información de la Pokédex</a>
-            <br>
-            <a th:href="@{/tabla}">Listado tabla Pokemons</a>
-            <br>
-            <a th:href="@{/galeria}">Galeria Pokémon</a>
+            <nav th:replace="~{fragments :: menu}"></nav>
             <div class="cards">
                 <div class="card" th:each="pokemon : ${pokemons}">
                     <div class="card-image">
@@ -26,5 +22,6 @@
             </div>
         </section>
     </main>
+    <footer th:replace="~{fragments :: footer}"></footer>
 </body>
 </html>

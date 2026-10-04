@@ -11,10 +11,7 @@
 <body>
 <main class="page">
   <header class="topbar">
-    <nav class="nav">
-		<a href="/">Inicio</a>
-		<a href="/galeria">Galería</a>
-	</nav>
+      <nav th:replace="~{fragments :: menu}"></nav>
       <span th:text = "${#temporals.format(fecha, 'dd''/''MM''/''yyyy'' a las ''HH:mm')}" class="updated"></span>
   </header>
   <section class="hero">
@@ -44,6 +41,5 @@
     </table>
   </section>
 </main>
-
-
+<footer th:replace="~{fragments :: footer}"></footer>
 </body></html>
