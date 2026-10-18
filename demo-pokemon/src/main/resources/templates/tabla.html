@@ -11,9 +11,12 @@
 <body>
 <main class="page">
   <header class="topbar">
+      <div th:with="pagina = 'tabla'">
       <nav th:replace="~{fragments :: menu}"></nav>
+      </div>
       <span th:text = "${#temporals.format(fecha, 'dd''/''MM''/''yyyy'' a las ''HH:mm')}" class="updated"></span>
   </header>
+    <form th:replace="~{fragments :: formulario}"></form>
   <section class="hero">
 	<h1>Pokémon en formato tabla</h1>
 	<p>Compara rápidamente sus medidas y experiencia base.</p>
@@ -27,6 +30,7 @@
 		<th>Altura</th>
 		<th>Peso</th>
 		<th>Experiencia</th>
+		<th>Detalles</th>
 	  </tr></thead>
       <tbody>
         <tr th:each ="pokem, iterStat : ${listaPokemons}">
@@ -36,6 +40,7 @@
 			<td th:text="${#numbers.formatDecimal(pokem.height / 10.0,1,1) + ' m'}">0,7 m</td>
 			<td th:text="${#numbers.formatDecimal(pokem.weight / 10.0,1,1) + ' kg'}">6,9 kg</td>
 			<td th:text="${pokem.baseExperience + ' puntos'}">64 puntos</td>
+            <td><a th:href="@{'/pokemon/' + ${pokem.id}}">Ver detalle</a></td>
 		</tr>
       </tbody>
     </table>
