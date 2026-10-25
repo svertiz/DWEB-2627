@@ -16,7 +16,11 @@
     <a href="/pokemon/galeria" style="color:white;text-decoration:none;font-weight:bold;font-size:16px;">Galería</a>
     <a href="/pokemon/batalla" style="color:white;text-decoration:none;font-weight:bold;font-size:16px;" th:href="@{/pokemon/batalla}">Batalla</a>
     <a href="/pokemon/equipo" style="color:white;text-decoration:none;font-weight:bold;font-size:16px;" th:href="@{/pokemon/equipo}">Equipo</a>
+    <a href="/pokemon/entrenadores" style="color:white;text-decoration:none;font-weight:bold;font-size:16px;" th:href="@{/entrenadores}">Entrenadores</a>
     <a style="color:white;text-decoration:none;font-weight:bold;font-size:16px;" th:if="${nombreEntrenador != null}" th:text="${'Entrenador: '+nombreEntrenador}">Nombre</a>
+    <form th:if="${nombreEntrenador ne null}" th:action="@{/pokemon/entrenador/salir}" method="post">
+    <button style="background-color: red;color:white;text-decoration:none;font-weight:bold;font-size:16px;" th:href="@{/pokemon/entrenadores}">Cerrar Sesión</button>
+    </form>
 </nav>
 
 <!-- =========================================================

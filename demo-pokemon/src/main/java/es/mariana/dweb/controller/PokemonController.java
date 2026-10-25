@@ -1,6 +1,9 @@
 package es.mariana.dweb.controller;
 
+import es.mariana.dweb.exception.EntrenadorException;
+import es.mariana.dweb.model.entities.Entrenador;
 import es.mariana.dweb.model.entities.Pokemon;
+import es.mariana.dweb.model.service.EntrenadorService;
 import es.mariana.dweb.model.service.PokemonService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ public class PokemonController {
 
     @Autowired
     private PokemonService pokemonService;
+    @Autowired
+    private EntrenadorService entrenadorService;
 
     @GetMapping("/")
     public String home(Model model) {
@@ -57,12 +62,17 @@ public class PokemonController {
         ArrayList<Pokemon.Type> listaTipos = pokemonService.findAllTypes();
 
 
+        Entrenador entrenador =
+                (Entrenador) session.getAttribute("entrenador");
+
+        model.addAttribute("nombreEntrenador",
+                entrenador != null ? entrenador.getNombre() : null);
+
         model.addAttribute("nombre", nombre);
         model.addAttribute("alturaMin", alturaMin);
         model.addAttribute("pesoMax", pesoMax);
         model.addAttribute("orden", orden);
         model.addAttribute("direccion", direccion);
-        model.addAttribute("nombreEntrenador",session.getAttribute("nombreEntrenador"));
         model.addAttribute("errorEquipo",session.getAttribute("errorEquipo"));
 
         model.addAttribute("tipo", tipo);
@@ -87,12 +97,17 @@ public class PokemonController {
         ArrayList<Pokemon.Type> listaTipos = pokemonService.findAllTypes();
 
 
+        Entrenador entrenador =
+                (Entrenador) session.getAttribute("entrenador");
+
+        model.addAttribute("nombreEntrenador",
+                entrenador != null ? entrenador.getNombre() : null);
+
         model.addAttribute("nombre", nombre);
         model.addAttribute("alturaMin", alturaMin);
         model.addAttribute("pesoMax", pesoMax);
         model.addAttribute("orden", orden);
         model.addAttribute("direccion", direccion);
-        model.addAttribute("nombreEntrenador",session.getAttribute("nombreEntrenador"));
         model.addAttribute("errorEquipo",session.getAttribute("errorEquipo"));
 
         model.addAttribute("tipo", tipo);
@@ -146,19 +161,6 @@ public class PokemonController {
         return "redirect:/pokemon/equipo";
     }
 
-    @PostMapping("/pokemon/equipo/eliminar")
-    public String eliminar(HttpSession session, @RequestParam("id") int id) {
-
-         ArrayList<Pokemon> pokemonsEntrenador = (ArrayList<Pokemon>) session.getAttribute("pokemonsEntrenador");
-        for (int i = 0; i < pokemonsEntrenador.size(); i++) {
-            if (pokemonsEntrenador.get(i).getName().equals(pokemonService.findById(id).getName())){
-                pokemonsEntrenador.remove(i);
-                break;
-            }
-        }
-        session.setAttribute("pokemonsEntrenador",pokemonsEntrenador);
-        return "redirect:/pokemon/equipo";
-    }
 
 
     @PostMapping("/pokemon/equipo/combatir")
@@ -172,33 +174,29 @@ public class PokemonController {
     }
 
     @PostMapping("/pokemon/entrenador/añadirAlEquipo")
-    public String añadirAlEquipo(HttpSession session, @RequestParam("id") int id) {
-        ArrayList<Pokemon> pokemonsEntrenador = (ArrayList<Pokemon>) session.getAttribute("pokemonsEntrenador");
-        if (pokemonsEntrenador == null) {
-            pokemonsEntrenador = new ArrayList<>();
-        } else {
+    public String añadirAlEquipo(HttpSession session,
+                                 @RequestParam("id") int id) {
+        try {
+            Entrenador entrenador =
+                    (Entrenador) session.getAttribute("entrenador");
 
-        }
-        boolean estaLista = false;
-        for (Pokemon pokemon : pokemonsEntrenador) {
-            if (pokemon.getName().equals(pokemonService.findById(id).getName())){
-                estaLista = true;
+            if (entrenador == null) {
+                session.setAttribute("error",
+                        "Selecciona un entrenador primero.");
+                return "redirect:/pokemon/galeria";
             }
+            Entrenador actualizado = entrenadorService.anadirPokemon(entrenador.getId(), id);
+
+            session.setAttribute("entrenador", actualizado);
+
+            session.removeAttribute("errorEquipo");
+            session.removeAttribute("equipoLleno");
+            session.removeAttribute("error");
+
+        } catch (EntrenadorException e) {
+            session.setAttribute("error", e.getMessage());
         }
 
-        if (estaLista) {
-            session.setAttribute("errorEquipo", true);
-        } else if (pokemonsEntrenador.size() >= 6) {
-            session.setAttribute("errorEquipo", false);
-            session.setAttribute("equipoLleno", true);
-        } else {
-            pokemonsEntrenador.add(pokemonService.findById(id));
-            session.setAttribute("errorEquipo", false);
-            session.setAttribute("equipoLleno", false);
-        }
-
-
-        session.setAttribute("pokemonsEntrenador",pokemonsEntrenador);
         return "redirect:/pokemon/galeria";
     }
 

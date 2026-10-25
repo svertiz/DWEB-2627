@@ -49,39 +49,33 @@
 
     <!-- ESTADO 1: SIN ENTRENADOR.
          TAREA: mostrar esta sección únicamente cuando no haya entrenador en sesión. -->
-    <section class="panel" th:if="${nombreEntrenador eq null}">
-        <h2>Registrar entrenador</h2>
-        <p>Introduce un nombre para comenzar tu aventura.</p>
-        <!-- TAREA: adaptar action y campos según el controlador. -->
-        <form th:action="@{/pokemon/entrenador}" method="post">
-            <label class="field" for="nombreEntrenador">Nombre del entrenador</label>
-            <div class="form-row">
-                <input type="text" id="nombreEntrenador" name="nombreEntrenador" placeholder="Ej.: Ash" maxlength="50">
-                <button type="submit">Guardar entrenador</button>
-            </div>
-        </form>
+    <section class="panel" th:if="${session.entrenador == null}">
+        <h2>Sin entrenador seleccionado</h2>
+        <p>Selecciona un entrenador antes de gestionar su equipo.</p>
+        <a class="btn" th:href="@{/entrenadores}">Ver entrenadores</a>
     </section>
 
     <!-- ESTADO 2: CON ENTRENADOR.
          TAREA: mostrar esta sección únicamente cuando haya entrenador en sesión. -->
-    <section class="panel" th:if="${nombreEntrenador ne null}">
+    <section class="panel" th:if="${session.entrenador ne null}">
         <div class="form-row" style="justify-content:space-between;">
             <div>
-                <h2 th:text="'Equipo de '+${nombreEntrenador}">Equipo de Ash</h2>
-                <p>Pokémon en el equipo: <strong th:text="${(pokemonsEntrenador == null ? 0 : #lists.size(pokemonsEntrenador)) + '/6'}">2 / 6</strong></p>
+                <h2 th:text="'Equipo de '+${session.entrenador.nombre}">Equipo de Ash</h2>
+                <p>Pokémon en el equipo:
+                    <strong th:text="${(pokemons == null ? 0 : #lists.size(pokemons)) + '/6'}">2 / 6 </strong></p>
             </div>
-            <form th:action="@{/pokemon/entrenador/salir}" method="post">
+            <form th:action="@{/entrenadores/salir}" method="post">
                 <button class="button-danger" type="submit">Cerrar sesión</button>
             </form>
         </div>
 
         <!-- TAREA: mostrar este mensaje solo si el equipo está vacío. -->
-        <p th:if="${pokemonsEntrenador == null or #lists.size(pokemonsEntrenador) == 0}" class="empty">Todavía no tienes Pokémon. Visita la tabla o la galería para añadirlos.</p>
+        <p th:if="${pokemons == null or #lists.size(pokemons) == 0}" class="empty">Todavía no tienes Pokémon. Visita la tabla o la galería para añadirlos.</p>
 
         <!-- TAREA: sustituir estas tarjetas de ejemplo por un bucle Thymeleaf.
              Se debe mostrar una tarjeta por cada Pokémon del equipo. -->
-        <div class="cards" th:if="${pokemonsEntrenador != null and #lists.size(pokemonsEntrenador) > 0}">
-            <article class="card" th:each="poke : ${pokemonsEntrenador}">
+        <div class="cards" th:if="${pokemons != null and #lists.size(pokemons) > 0}">
+            <article class="card" th:each="poke : ${pokemons}">
                 <div class="image"><img th:src="${poke.imageURL}"  th:alt="${poke.name}"></div>
                 <div class="card-body">
                     <span class="number" th:text="${'N.º '+#numbers.formatInteger(poke.id,2)}">N.º 0025</span>
