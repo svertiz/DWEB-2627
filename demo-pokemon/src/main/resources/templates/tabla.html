@@ -16,6 +16,10 @@
       </div>
       <span th:text = "${#temporals.format(fecha, 'dd''/''MM''/''yyyy'' a las ''HH:mm')}" class="updated"></span>
   </header>
+    <div role="alert" style="background:#fff1f2;border-left:5px solid #be123c;border-radius:10px;padding:16px 20px;margin-bottom:24px;color:#9f1239;">
+        <strong>No se ha podido añadir el Pokémon</strong>
+        <p style="margin:6px 0 0;">Este Pokémon ya pertenece a tu equipo.</p>
+    </div>
     <form th:replace="~{fragments :: formulario}"></form>
   <section class="hero">
 	<h1>Pokémon en formato tabla</h1>
@@ -31,6 +35,7 @@
 		<th>Peso</th>
 		<th>Experiencia</th>
 		<th>Detalles</th>
+		<th th:if="${nombreEntrenador != null}">Añadir a equipo</th>
 	  </tr></thead>
       <tbody>
         <tr th:each ="pokem, iterStat : ${listaPokemons}">
@@ -41,7 +46,13 @@
 			<td th:text="${#numbers.formatDecimal(pokem.weight / 10.0,1,1) + ' kg'}">6,9 kg</td>
 			<td th:text="${pokem.baseExperience + ' puntos'}">64 puntos</td>
             <td><a th:href="@{'/pokemon/' + ${pokem.id}}">Ver detalle</a></td>
-		</tr>
+            <td th:if="${nombreEntrenador != null}">
+                <form method="post" th:action="@{/pokemon/entrenador/añadirAlEquipo}">
+                    <input type="hidden" name="id" th:value="${pokem.id}">
+                    <button type="submit">Añadir al equipo</button>
+                </form>
+            </td>
+        </tr>
       </tbody>
     </table>
   </section>

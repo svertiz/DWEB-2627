@@ -17,6 +17,10 @@
 	<h1>Galería Pokémon</h1>
 	<p>Descubre una selección aleatoria de Pokémon.</p>
   </header>
+    <div role="alert" style="background:#fff1f2;border-left:5px solid #be123c;border-radius:10px;padding:16px 20px;margin-bottom:24px;color:#9f1239;">
+        <strong>No se ha podido añadir el Pokémon</strong>
+        <p style="margin:6px 0 0;">Este Pokémon ya pertenece a tu equipo.</p>
+    </div>
     <form th:replace="~{fragments :: formulario}"></form>
   <section class="cards">
     <article class="card" th:each="poke : ${galeriaPokemon}">
@@ -30,8 +34,12 @@
 				<div class="measure"><span class="label">Peso</span><span class="value" th:text="${#numbers.formatDecimal(poke.weight / 10.0,1,1) + ' kg'}">6,9 kg</span></div>
 			</div>
 		</div>
+        <form method="post" th:action="@{/pokemon/entrenador/añadirAlEquipo}" th:if="${nombreEntrenador != null}">
+            <input type="hidden" name="id" th:value="${poke.id}">
+            <button type="submit">Añadir al equipo</button>
+        </form>
 	</article>
-    </section>
+  </section>
 </main>
 <footer th:replace="~{fragments :: footer}"></footer>
 </body></html>
